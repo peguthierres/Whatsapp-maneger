@@ -6,8 +6,8 @@
 [build.environment]
   NODE_VERSION = "18"
 
-[[functions]]
-  path = "server"
+[functions]
+  external_node_modules = []
   node_bundler = "esbuild"
 
 [dev]
