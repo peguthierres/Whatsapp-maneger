@@ -1,0 +1,50 @@
+[build]
+  publish = "dist/public"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/server/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/ws"
+  to = "/.netlify/functions/websocket"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  external_node_modules = ["@neondatabase/serverless"]
+
+[[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Environment variables needed for deployment
+# Set these in Netlify dashboard:
+# DATABASE_URL - Your Supabase database connection string
+# SESSION_SECRET - Random string for session security
+# WHATSAPP_VERIFY_TOKEN - Token for WhatsApp webhook verification
+# REPL_ID - Your Replit app ID (if using Replit auth)
+# REPLIT_DOMAINS - Comma-separated list of allowed domains
+# ISSUER_URL - OAuth issuer URL (default: https://replit.com/oidc)
+
+# For local development, copy .env.example to .env and fill in the values

@@ -1,0 +1,91 @@
+# 🚀 Micro-SaaS: WhatsApp Business Chatbot Manager
+
+Crie um projeto full-stack no Replit (usando Node.js no backend, PostgreSQL como banco de dados e React no frontend), com o objetivo de desenvolver um sistema SaaS para gerenciamento completo de ChatBots no WhatsApp Business.
+
+---
+
+## 🎯 Funcionalidades do Projeto
+
+### 🔧 Backend (Node.js + Express)
+- Autenticação com JWT
+- CRUD completo para fluxos de conversa
+- Sistema de criação de **nós e ligações (make flow)**:
+  - Cada nó representa uma mensagem ou ação do bot
+  - Nós podem se conectar entre si (como um grafo orientado)
+- Verificação de logs (mensagens recebidas/enviadas, erros, eventos)
+- Integração de Webhooks:
+  - Para recebimento de mensagens do WhatsApp Business API
+  - Webhook customizável por fluxo
+- API RESTful segura e documentada (Swagger opcional)
+- Middleware para registro de erros e autenticação
+
+### 🧠 Flux Engine (Core do Chatbot)
+- Processamento inteligente dos fluxos
+- Execução dinâmica dos nós a partir de triggers de entrada (ex: palavras-chave)
+- Suporte a ações como:
+  - Enviar mensagem
+  - Esperar resposta
+  - Redirecionar para outro nó
+  - Executar Webhook externo
+
+---
+
+## 🧩 Frontend (React.js + TailwindCSS)
+- Painel Admin com:
+  - Dashboard (fluxos ativos, mensagens do dia, estatísticas)
+  - Builder visual de Fluxo de Conversa (tipo "arrasta e solta" com ligações)
+  - Editor de nós (mensagem, tipo de ação, condição, próximo nó)
+  - Logs em tempo real com filtros
+  - Configuração de Webhooks por fluxo
+- Página de instalação/configuração rápida do WhatsApp Business API (instruções)
+
+---
+
+## 🗃️ Banco de Dados (PostgreSQL - Supabase ou Prisma ORM)
+- Tabelas:
+  - `users`: usuários SaaS
+  - `flows`: fluxos de conversa
+  - `flow_nodes`: nós individuais
+  - `flow_links`: conexões entre nós
+  - `logs`: histórico de interações
+  - `webhooks`: URLs configuradas por fluxo
+
+---
+
+## ⚙️ Deploy e Instalação
+- Script automatizado de setup (bash ou Node)
+- `.env` para configurações (tokens, DB, API keys)
+- Instruções no README para rodar localmente ou em Docker/Replit
+- Suporte a múltiplos clientes (estrutura SaaS)
+
+---
+
+## 🧪 Testes
+- Testes unitários com Jest no backend
+- Testes de integração básicos
+
+---
+
+## 📘 Extras
+- Interface multilíngue (i18n)
+- Plano gratuito com limite de fluxos
+- Integração futura com GPT para respostas inteligentes
+
+---
+
+## 📤 Output Esperado
+Crie todas as pastas e arquivos necessários no projeto Replit para iniciar o desenvolvimento, incluindo:
+
+- `backend/` com Express + rotas + controllers + modelos
+- `frontend/` com React e estrutura modular
+- `db/schema.sql` com estrutura do banco
+- `scripts/setup.sh` para instalação
+- `README.md` explicando uso
+
+> Comece com o esqueleto básico do projeto e depois avance para a criação dos fluxos, sistema de logs e integração com Webhooks.
+
+---
+
+## 📎 Observações
+- O objetivo é ser **plug-and-play** para qualquer negócio usar um Chatbot no WhatsApp com fluxos automatizados.
+- Priorize **manutenibilidade**, **segurança**, e **modularidade**.
