@@ -44,7 +44,29 @@ export const getQueryFn: <T>(options: {
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      queryFn: getQueryFn({ on401: "throw" }),
+      queryFn: async ({ queryKey }) => {
+        const response = await fetch(queryKey[0] as string, {
+          credentials: 'include',
+        });
+
+        if (response.status === 401) {
+          // Redirect to login on authentication failure
+          window.location.href = '/api/login';
+          throw new Error('Unauthorized');
+        }
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      },
+      retry: (failureCount, error) => {
+        // Don't retry on auth errors
+        if (error.message === 'Unauthorized') {
+          return false;
+        }
+        return failureCount < 3;
+      },
       refetchInterval: false,
       refetchOnWindowFocus: false,
       staleTime: Infinity,
