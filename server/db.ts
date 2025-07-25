@@ -1,17 +1,13 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import * as schema from "@shared/schema";
 
-if (!process.env.DATABASE_URL) {
-  throw new Error("DATABASE_URL environment variable is required");
+const DATABASE_URL = process.env.DATABASE_URL || process.env.REPLIT_DB_URL;
+
+if (!DATABASE_URL) {
+  console.error("No database URL found. Please set DATABASE_URL environment variable.");
+  console.log("For development, you can use Replit's built-in PostgreSQL database.");
+  process.exit(1);
 }
 
-// Configure for Supabase connection
-const sql = postgres(process.env.DATABASE_URL, {
-  ssl: 'require',
-  max: 20,
-  idle_timeout: 20,
-  connect_timeout: 60,
-});
-
-export const db = drizzle(sql, { schema });
+const connection = postgres(DATABASE_URL);
+export const db = drizzle(connection);
