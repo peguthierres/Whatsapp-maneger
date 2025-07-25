@@ -369,6 +369,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Serve static files and handle client-side routing
+  app.get('*', (req, res, next) => {
+    // Skip API routes
+    if (req.path.startsWith('/api/')) {
+      return next();
+    }
+    
+    // For all other routes, serve the React app
+    res.sendFile('index.html', { root: 'dist' });
+  });
+
   // Export WebSocket server for use in other services
   (httpServer as any).wss = wss;
 

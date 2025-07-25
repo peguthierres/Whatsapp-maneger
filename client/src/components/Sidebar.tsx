@@ -1,4 +1,4 @@
-import { useLocation } from "wouter";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -53,12 +53,49 @@ const navigation = [
 ];
 
 export default function Sidebar() {
-  const [location, setLocation] = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   const handleLogout = () => {
     window.location.href = "/api/logout";
   };
+
+  const menuItems = [
+    { path: "/", label: "Dashboard", icon: "📊" },
+    { path: "/flows", label: "Flow Builder", icon: "🔗" },
+    { path: "/logs", label: "Message Logs", icon: "📝" },
+    { path: "/webhooks", label: "Webhooks", icon: "🔗" },
+    { path: "/whatsapp", label: "WhatsApp Setup", icon: "📱" },
+  ];
+
+  return (
+    <div className="w-64 bg-white shadow-lg h-full">
+      <div className="p-4">
+        <h2 className="text-lg font-semibold text-gray-800">Menu</h2>
+      </div>
+      <nav className="mt-4">
+        {menuItems.map((item) => (
+          <button
+            key={item.path}
+            onClick={() => navigate(item.path)}
+            className={cn(
+              "w-full text-left px-4 py-3 flex items-center space-x-3 hover:bg-gray-100 transition-colors",
+              location.pathname === item.path ? "bg-blue-50 border-r-2 border-blue-500 text-blue-600" : "text-gray-700"
+            )}
+          >
+            <span>{item.icon}</span>
+            <span>{item.label}</span>
+          </button>
+        ))}
+      </nav>
+      <div className="absolute bottom-4 left-4 right-4">
+        <Button onClick={handleLogout} variant="outline" className="w-full">
+          Logout
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-hsl(20,5.9%,90%)">

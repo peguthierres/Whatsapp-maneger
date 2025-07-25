@@ -1,9 +1,19 @@
 [build]
-  publish = "dist/public"
+  base = "."
   command = "npm run build"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "18"
+
+[[functions]]
+  path = "server"
+  node_bundler = "esbuild"
+
+[dev]
+  command = "npm run dev"
+  port = 5000
+  publish = "dist"
 
 [[redirects]]
   from = "/api/*"
@@ -11,18 +21,9 @@
   status = 200
 
 [[redirects]]
-  from = "/ws"
-  to = "/.netlify/functions/websocket"
-  status = 200
-
-[[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-
-[functions]
-  node_bundler = "esbuild"
-  external_node_modules = ["@neondatabase/serverless"]
 
 [[headers]]
   for = "/api/*"
