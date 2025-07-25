@@ -20,6 +20,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Root API route
+  app.get('/api', (req, res) => {
+    res.json({ message: 'WhatsApp Bot Manager API', status: 'running' });
+  });
+
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
