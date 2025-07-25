@@ -34,46 +34,46 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
-  
+
   // Flow operations
   getUserFlows(userId: string): Promise<Flow[]>;
   getFlow(id: string): Promise<Flow | undefined>;
   createFlow(userId: string, flow: InsertFlow): Promise<Flow>;
   updateFlow(id: string, updates: Partial<InsertFlow>): Promise<Flow>;
   deleteFlow(id: string): Promise<void>;
-  
+
   // Flow node operations
   getFlowNodes(flowId: string): Promise<FlowNode[]>;
   createFlowNode(node: InsertFlowNode): Promise<FlowNode>;
   updateFlowNode(id: string, updates: Partial<InsertFlowNode>): Promise<FlowNode>;
   deleteFlowNode(id: string): Promise<void>;
-  
+
   // Flow link operations
   getFlowLinks(flowId: string): Promise<FlowLink[]>;
   createFlowLink(link: InsertFlowLink): Promise<FlowLink>;
   deleteFlowLink(id: string): Promise<void>;
-  
+
   // Message log operations
   getUserMessageLogs(userId: string, limit?: number): Promise<MessageLog[]>;
   createMessageLog(userId: string, log: InsertMessageLog): Promise<MessageLog>;
   getRecentMessages(userId: string, limit?: number): Promise<MessageLog[]>;
-  
+
   // Webhook operations
   getUserWebhooks(userId: string): Promise<Webhook[]>;
   getFlowWebhooks(flowId: string): Promise<Webhook[]>;
   createWebhook(userId: string, webhook: InsertWebhook): Promise<Webhook>;
   updateWebhook(id: string, updates: Partial<InsertWebhook>): Promise<Webhook>;
   deleteWebhook(id: string): Promise<void>;
-  
+
   // WhatsApp config operations
   getUserWhatsappConfig(userId: string): Promise<WhatsappConfig | undefined>;
   upsertWhatsappConfig(userId: string, config: InsertWhatsappConfig): Promise<WhatsappConfig>;
-  
+
   // User session operations
   getUserSession(phoneNumber: string): Promise<UserSession | undefined>;
   upsertUserSession(session: InsertUserSession): Promise<UserSession>;
   updateUserSession(phoneNumber: string, updates: Partial<InsertUserSession>): Promise<void>;
-  
+
   // Analytics operations
   getUserStats(userId: string): Promise<{
     activeFlows: number;
@@ -81,7 +81,7 @@ export interface IStorage {
     activeUsers: number;
     successRate: number;
   }>;
-  
+
   // Webhook logs
   createWebhookLog(log: any): Promise<WebhookLog>;
 }
@@ -106,6 +106,36 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  async getUserByEmail(email: string) {
+    const result = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+    return result[0] || null;
+  }
+
+  async createUser(userData: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    passwordHash: string;
+  }) {
+    const [result] = await db
+      .insert(users)
+      .values({
+        id: crypto.randomUUID(),
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        passwordHash: userData.passwordHash,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .returning();
+    return result;
   }
 
   // Flow operations

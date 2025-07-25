@@ -43,9 +43,7 @@
 # Set these in Netlify dashboard:
 # DATABASE_URL - Your Supabase database connection string
 # SESSION_SECRET - Random string for session security
+# JWT_SECRET - Secret key for JWT token signing
 # WHATSAPP_VERIFY_TOKEN - Token for WhatsApp webhook verification
-# REPL_ID - Your Replit app ID (if using Replit auth)
-# REPLIT_DOMAINS - Comma-separated list of allowed domains
-# ISSUER_URL - OAuth issuer URL (default: https://replit.com/oidc)
 
 # For local development, copy .env.example to .env and fill in the values

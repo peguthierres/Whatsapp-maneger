@@ -29,13 +29,14 @@ CREATE TABLE IF NOT EXISTS sessions (
 
 CREATE INDEX IF NOT EXISTS IDX_session_expire ON sessions (expire);
 
--- Users table (required for Replit Auth)
+-- Users table (with password authentication)
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR UNIQUE,
     first_name VARCHAR,
     last_name VARCHAR,
     profile_image_url VARCHAR,
+    password_hash VARCHAR,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -319,10 +320,20 @@ COMMENT ON TABLE user_sessions IS 'Active user conversation sessions';
 COMMENT ON TABLE webhook_logs IS 'Execution logs for webhook calls';
 
 -- Version info
-INSERT INTO pg_catalog.pg_description (objoid, classoid, objsubid, description)
-VALUES (
-    (SELECT oid FROM pg_class WHERE relname = 'flows'),
-    (SELECT oid FROM pg_class WHERE relname = 'pg_class'),
-    0,
-    'ChatBot Manager Schema v1.0 - WhatsApp Business Chatbot Management System'
-) ON CONFLICT DO NOTHING;
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_catalog.pg_description 
+        WHERE objoid = (SELECT oid FROM pg_class WHERE relname = 'flows')
+        AND classoid = (SELECT oid FROM pg_class WHERE relname = 'pg_class')
+        AND objsubid = 0
+    ) THEN
+        INSERT INTO pg_catalog.pg_description (objoid, classoid, objsubid, description)
+        VALUES (
+            (SELECT oid FROM pg_class WHERE relname = 'flows'),
+            (SELECT oid FROM pg_class WHERE relname = 'pg_class'),
+            0,
+            'ChatBot Manager Schema v1.0 - WhatsApp Business Chatbot Management System'
+        );
+    END IF;
+END $$;
